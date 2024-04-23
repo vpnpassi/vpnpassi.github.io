@@ -1,0 +1,78 @@
+#gameCanvas #snackbar {
+    visibility: hidden;
+    position: fixed;
+    bottom: 4em;
+    width: 30em;
+    margin-left: -15em;
+    left: 50%;
+}
+#gameCanvas #snackbar #snackbar_text {
+    padding: 1em;
+    background: rgba(255, 255, 255, 0.85);
+    color: black;
+    border-radius: 1em;
+}
+#gameCanvas #snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 4500ms;
+    animation: fadein 0.5s, fadeout 0.5s 4500ms;
+}
+
+/* ANIMATIONS */
+
+@-webkit-keyframes fadein {
+    from {
+        bottom: 0; 
+        opacity: 0;
+    }
+    to {
+        bottom: 4em; 
+        opacity: 1;
+    }
+}
+  
+@keyframes fadein {
+    from {
+        bottom: 0; 
+        opacity: 0;
+    }
+    to {
+        bottom: 4em; 
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeout {
+    from {
+        bottom: 4em; 
+        opacity: 1;
+    }
+    to {
+        bottom: 0; 
+        opacity: 0;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        bottom: 4em; 
+        opacity: 1;
+    }
+    to {
+        bottom: 0; 
+        opacity: 0;
+    }
+}
+
+/* RESPONSIVE SETTINGS */
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {}
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {}
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {}
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {}
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {}
