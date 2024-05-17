@@ -5,13 +5,20 @@ class ShopScene extends Phaser.Scene {
         super({ key: 'ShopScene' });
     }
 
-    preload() {   
-        preloadBackground(this);    
+    init(data) {
+        this.gameStatsData = data;
+    }
+
+    preload() {
+        preloadBackground(this);
     }
 
     create() {
         createBackground(this);
-        this.scene.launch('GUIScene', {active: true, from: 'ShopScene'});
+        this.scene.launch('GUIScene', {
+            active: true, 
+            from: 'ShopScene',
+        });
     }
 }
 

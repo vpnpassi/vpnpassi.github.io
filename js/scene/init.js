@@ -1,8 +1,17 @@
 import { preloadBackground, createBackground } from "../module/bgImage.js";
+import { Energy } from '../methods/energy.js';
+import { Gold } from '../methods/gold.js';
+import { Gems } from '../methods/gem.js';
 
 class InitScreen extends Phaser.Scene {
     constructor() {
         super({ key: 'InitScreen' });
+    }
+
+    init() {
+        this.registry.set('gameStatsEnergyValue', new Energy(5, this));
+        this.registry.set('gameStatsGoldValue', new Gold(0));
+        this.registry.set('gameStatsGemsValue', new Gems(0));
     }
 
     preload() {
@@ -11,6 +20,7 @@ class InitScreen extends Phaser.Scene {
     }
 
     create() {
+
         createBackground(this);
         var startGame_button_container = this.add.container();
 
@@ -61,7 +71,7 @@ class InitScreen extends Phaser.Scene {
 
         startGame_button_container.on(
             'pointerdown', function() {
-                this.scene.start('MapScene');
+                this.scene.launch('MenuScene');
             }, this
         );
     }

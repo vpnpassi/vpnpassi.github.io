@@ -5,56 +5,49 @@ class GUIScene extends Phaser.Scene {
             active: false
         });
         this.gameStatsActive = false;
-        this.settingsSceneActive = false;
         this.shopSceneActive = false;
-        this.mapSceneActive = false;
+        this.menuSceneActive = false;
         this.gameSceneActive = false;
+
     }
 
     init(data) {
         if (data.from === 'gameSceneActive') {
-            this.settingsSceneActive = false;
             this.shopSceneActive = false;
-            this.mapSceneActive = false;
+            this.menuSceneActive = false;
             this.gameStatsActive = true;
-        }
-        if (data.from === 'SettingsScene') {
-            this.settingsSceneActive = true;
-            this.shopSceneActive = false;
-            this.mapSceneActive = false;
-            this.gameStatsActive = false;
         }
         if (data.from === 'ShopScene') {
-            this.settingsSceneActive = false;
             this.shopSceneActive = true;
-            this.mapSceneActive = false;
+            this.menuSceneActive = false;
             this.gameStatsActive = true;
         }
-        if (data.from === 'MapScene') {
-            this.settingsSceneActive = false;
+        if (data.from === 'MenuScene') {
             this.shopSceneActive = false;
-            this.mapSceneActive = true;
+            this.menuSceneActive = true;
             this.gameStatsActive = true;
         }
+
+        this.gameStatsEnergyValue = this.registry.get('gameStatsEnergyValue');
+        this.gameStatsGoldValue = this.registry.get('gameStatsGoldValue');
+        this.gameStatsGemsValue = this.registry.get('gameStatsGemsValue');
+
     }
 
     preload() {
-        this.load.audio('menu_music', ['assets/sound/menu.mp3']);
-        this.load.image('settingButtonBG', 'assets/sprites/badge_hexagon_yellow.png');
-        this.load.image('settingButtonIcon', 'assets/icons/icon_gear_gold.png');
-        this.load.image('shopButtonBG', 'assets/sprites/badge_hexagon_green.png');
-        this.load.image('shopButtonIcon', 'assets/icons/icon_shop_red.png');
-        this.load.image('mapButtonBG', 'assets/sprites/badge_hexagon_red.png');
-        this.load.image('mapButtonIcon', 'assets/icons/icon_map.png');
-        this.load.image('backButtonBG', 'assets/sprites/badge_hexagon_purple.png');
-        this.load.image('backButtonIcon', 'assets/icons/icon_ui-arrow-left_LP.png');
+        this.load.image('shopButtonBG', 'assets/sprites/shop_button.png');
+        this.load.image('menuButtonBG', 'assets/sprites/menu_button.png');
+
+        this.load.image('energyBarLeft', 'assets/sprites/EnergyBar_left.png');
+        this.load.image('energyBarRight', 'assets/sprites/EnergyBar_right.png');
+        this.load.image('goldBarLeft', 'assets/sprites/GoldBar_left.png');
+        this.load.image('goldBarRight', 'assets/sprites/GoldBar_right.png');
+        this.load.image('gemBarLeft', 'assets/sprites/GemBar_left.png');
+        this.load.image('gemBarRight', 'assets/sprites/GemBar_right.png');
+        this.load.image('statBarMiddle', 'assets/sprites/Middle.png');
     }
 
     create() {
-
-        var menu_music = this.sound.add('menu_music', {volume: 0.025});
-        menu_music.loop = true;
-        menu_music.play();
 
         var guiGroup = this.add.container();
         var guiHeader = this.add.container();
@@ -62,164 +55,177 @@ class GUIScene extends Phaser.Scene {
         var guiFooter = this.add.container();
         guiGroup.add(guiFooter);
 
-        /* BACKBUTTON */
-        var backButtonGroup = this.add.container();
-        backButtonGroup.setSize(128, 128);
-        backButtonGroup.setInteractive();
-        backButtonGroup.input.cursor = 'pointer';
+        /* GameStats */
+        var gameStatsGroup = this.add.container();
+ 
+        var gameStatsEnergyGroup = this.add.container();
+        var gameStatsEnergyWrapperGroup = this.add.container();
 
-        var backButtonText = this.add.text(
-            0, 
-            0,
-            'Zurück',
-        ).setStyle({
-            fontFamily: 'Fredoka',
-            fontSize: '20px', 
-            color: '#ffffff',
-            stroke: '#00000080',
-            strokeThickness: 4,
-        });
-        backButtonText.setOrigin(0.5, 0.5);
-        backButtonText.y = 8;
-        var backButtonBG = this.add.sprite(
+        var energyBarLeft = this.add.sprite(
             0,
             0,
-            'backButtonBG'
-        ).setAngle(
-            20
-        ).setDisplaySize(
-            128,
-            128
-        ).setOrigin(0.5, 0.5);
-        backButtonBG.width = 128;
-        backButtonBG.height = 128;
-        var backButtonIcon = this.add.sprite(
-            0,
-            0,
-            'backButtonIcon'
+            'energyBarLeft'
         ).setDisplaySize(
             64,
             64
         ).setOrigin(0.5, 0.5);
-        backButtonIcon.y = -32;
-        backButtonIcon.width = 128;
-        backButtonIcon.height = 128;
-
-        if (this.mapSceneActive == true || this.gameSceneActive == true) {
-            backButtonGroup.visible = false;
-            console.log(backButtonGroup);
-        }
-
-        backButtonGroup.add(backButtonBG);
-        backButtonGroup.add(backButtonIcon);
-        backButtonGroup.add(backButtonText);
-        backButtonGroup.setSize(128, 128);
-        backButtonGroup.setPosition(96, 96);
-        guiHeader.add(backButtonGroup);
-
-        /* SETTINGSBUTTON */
-        var settingButtonGroup = this.add.container();
-        settingButtonGroup.setSize(128, 128);
-        settingButtonGroup.setInteractive();
-        settingButtonGroup.input.cursor = 'pointer';
-
-        var settingButtonText = this.add.text(
-            0, 
-            0,
-            'Einstellungen',
-        ).setStyle({
-            fontFamily: 'Fredoka',
-            fontSize: '20px', 
-            color: '#ffffff',
-            stroke: '#00000080',
-            strokeThickness: 4,
-        });
-        settingButtonText.setOrigin(0.5, 0.5);
-        settingButtonText.y = 8;
-        var settingButtonBG = this.add.sprite(
+        gameStatsEnergyGroup.add(energyBarLeft);
+        var energyBarMiddle = this.add.sprite(
             0,
             0,
-            'settingButtonBG'
-        ).setAngle(
-            20
-        ).setDisplaySize(
-            128,
-            128
-        ).setOrigin(0.5, 0.5);
-        settingButtonBG.width = 128;
-        settingButtonBG.height = 128;
-        var settingButtonIcon = this.add.sprite(
-            0,
-            0,
-            'settingButtonIcon'
+            'statBarMiddle'
         ).setDisplaySize(
             64,
             64
         ).setOrigin(0.5, 0.5);
-        settingButtonIcon.y = -32;
-        settingButtonIcon.width = 128;
-        settingButtonIcon.height = 128;
+        gameStatsEnergyGroup.add(energyBarMiddle);
+        var energyBarRight = this.add.sprite(
+            0,
+            0,
+            'energyBarRight'
+        ).setDisplaySize(
+            64,
+            64
+        ).setOrigin(0.5, 0.5);
+        gameStatsEnergyGroup.add(energyBarRight);
 
-        if (this.settingsSceneActive == true) {
-            settingButtonGroup.removeInteractive();
-            var settingButtonActiveCircle = this.add.graphics();
-            settingButtonActiveCircle.fillStyle(
-                0xFFFFFF, 1
-            );
-            settingButtonGroup.add(settingButtonActiveCircle);
-            settingButtonActiveCircle.fillCircle(0, 0, 8);
-            settingButtonActiveCircle.setPosition(0, 64);
+        var gameStatsEnergyCurrentText = this.add.text(0, 0, '').setOrigin(0.5, 0.5).setStyle({fontSize: '32px', fontFamily: 'Fredoka', color: '#ffffff', align: 'right', fontStyle: 'bold'});
+        
+        gameStatsEnergyCurrentText.setText(String(this.gameStatsEnergyValue.energy));
+        
+        gameStatsEnergyWrapperGroup.add(gameStatsEnergyCurrentText);
+
+        gameStatsEnergyGroup.add(gameStatsEnergyWrapperGroup);
+        gameStatsEnergyWrapperGroup.setSize(8 + gameStatsEnergyCurrentText.width + 8, gameStatsEnergyCurrentText.height);
+
+        energyBarMiddle.setDisplaySize(gameStatsEnergyWrapperGroup.width + 16, 64);
+
+        energyBarLeft.setX(- (gameStatsEnergyWrapperGroup.width / 2) - (energyBarLeft.width / 2) + 24);
+        energyBarRight.setX((gameStatsEnergyWrapperGroup.width / 2) + (energyBarRight.width / 2) - 24);
+
+        gameStatsEnergyGroup.width = energyBarLeft.width + 8 + gameStatsEnergyCurrentText.width + 8 + energyBarRight.width;
+
+        gameStatsGroup.add(gameStatsEnergyGroup);
+
+        var gameStatsGoldGroup = this.add.container();
+        var gameStatsGoldWrapperGroup = this.add.container();
+
+        var goldBarLeft = this.add.sprite(
+            0,
+            0,
+            'goldBarLeft'
+        ).setDisplaySize(
+            16,
+            64
+        ).setOrigin(0.5, 0.5);
+        gameStatsGroup.add(goldBarLeft);
+        var goldBarMiddle = this.add.sprite(
+            0,
+            0,
+            'statBarMiddle'
+        ).setDisplaySize(
+            64,
+            64
+        ).setOrigin(0.5, 0.5);
+        gameStatsGroup.add(goldBarMiddle);
+        var goldBarRight = this.add.sprite(
+            0,
+            0,
+            'goldBarRight'
+        ).setDisplaySize(
+            64,
+            64
+        ).setOrigin(0.5, 0.5);
+        gameStatsGroup.add(goldBarRight);
+
+        var gameStatsGoldCurrentText = this.add.text(0, 0, '').setOrigin(0.5, 0.5).setStyle({fontSize: '32px', fontFamily: 'Fredoka', color: '#ffffff', align: 'right', fontStyle: 'bold'});
+        gameStatsGoldCurrentText.setText(String(this.gameStatsGoldValue.gold));
+        gameStatsGoldWrapperGroup.add(gameStatsGoldCurrentText);
+        gameStatsGoldWrapperGroup.width = gameStatsGoldCurrentText.width;
+        gameStatsGoldGroup.add(gameStatsGoldWrapperGroup);
+
+        goldBarLeft.setX(- (gameStatsGoldWrapperGroup.width / 2) - (goldBarLeft.width / 2) - 24);
+        goldBarMiddle.setDisplaySize(8 + gameStatsGoldWrapperGroup.width + 8, 64);
+        goldBarMiddle.setX(- 24);
+        gameStatsGoldCurrentText.setX(-24);
+        goldBarRight.setX((gameStatsGoldWrapperGroup.width / 2) + (goldBarRight.width / 2) - 48);
+
+        gameStatsGoldGroup.width = goldBarLeft.width + gameStatsGoldWrapperGroup.width + goldBarRight.width;
+        gameStatsGroup.add(gameStatsGoldGroup);
+
+        var gameStatsGemsGroup = this.add.container();
+        var gameStatsGemsWrapperGroup = this.add.container();
+
+        var gemBarLeft = this.add.sprite(
+            0,
+            0,
+            'gemBarLeft'
+        ).setDisplaySize(
+            64,
+            64
+        ).setOrigin(0.5, 0.5);
+        gameStatsGemsGroup.add(gemBarLeft);
+        var gemBarMiddle = this.add.sprite(
+            0,
+            0,
+            'statBarMiddle'
+        ).setDisplaySize(
+            64,
+            64
+        ).setOrigin(0.5, 0.5);
+        gameStatsGemsGroup.add(gemBarMiddle);
+        var gemBarRight = this.add.sprite(
+            0,
+            0,
+            'gemBarRight'
+        ).setDisplaySize(
+            64,
+            64
+        ).setOrigin(0.5, 0.5);
+        gameStatsGemsGroup.add(gemBarRight);
+
+        var gameStatsGemsCurrentText = this.add.text(0, 0, '').setOrigin(0.5, 0.5).setStyle({fontSize: '32px', fontFamily: 'Fredoka', color: '#ffffff', align: 'right', fontStyle: 'bold'});
+        gameStatsGemsCurrentText.setText(String(this.gameStatsGemsValue.gems));
+        gameStatsGemsWrapperGroup.add(gameStatsGemsCurrentText);
+        gameStatsGemsGroup.width = gameStatsGemsCurrentText.width + 16;
+        gameStatsGemsGroup.add(gameStatsGemsWrapperGroup);
+
+        gemBarLeft.setX(- (gameStatsGemsGroup.width / 2) - (gemBarLeft.width / 2) + 24);
+        gemBarMiddle.setDisplaySize(8 + gameStatsGemsGroup.width + 8, 64);
+        gemBarRight.setX((gameStatsGemsGroup.width / 2) + (gemBarRight.width / 2) - 24);
+
+        gameStatsGroup.add(gameStatsGemsGroup);
+
+        if(gameStatsEnergyGroup.displayWidth < gameStatsGoldGroup.displayWidth) {
+            gameStatsEnergyGroup.setX(- (gameStatsGoldGroup.displayWidth / 2) - (gameStatsEnergyGroup.displayWidth / 2) -32);
+        } else if(gameStatsEnergyGroup.displayWidth > gameStatsGoldGroup.displayWidth) {
+            gameStatsEnergyGroup.setX(- (gameStatsEnergyGroup.displayWidth / 2) - (gameStatsGoldGroup.displayWidth / 2) -32);
+        } else {
+            gameStatsEnergyGroup.setX(- 24 - 16 - 128);
         }
 
-        settingButtonGroup.add(settingButtonBG);
-        settingButtonGroup.add(settingButtonIcon);
-        settingButtonGroup.add(settingButtonText);
-        settingButtonGroup.setSize(128, 128);
-        settingButtonGroup.setPosition(this.scale.baseSize.width - 96, 96);
-        guiHeader.add(settingButtonGroup);
+        gameStatsGemsGroup.setX((gameStatsGemsGroup.displayWidth / 2) + (gameStatsGoldGroup.displayWidth / 2) + 24 + 16 + 128);
 
+        gameStatsGroup.setPosition(this.scale.baseSize.width / 2, 96);
+
+        guiHeader.add(gameStatsGroup);
+        
         /* SHOPBUTTON */
         var shopButtonGroup = this.add.container();
         shopButtonGroup.setSize(128, 128);
         shopButtonGroup.setInteractive();
         shopButtonGroup.input.cursor = 'pointer';
 
-        var shopButtonText = this.add.text(
-            0, 
-            0,
-            'Shop',
-        ).setStyle({
-            fontFamily: 'Fredoka',
-            fontSize: '20px', 
-            color: '#ffffff',
-            stroke: '#00000080',
-            strokeThickness: 4,
-        });
-        shopButtonText.setOrigin(0.5, 0.5);
-        shopButtonText.y = 8;
         var shopButtonBG = this.add.sprite(
             0,
             0,
             'shopButtonBG'
-        ).setAngle(
-            20
         ).setDisplaySize(
             128,
             128
         ).setOrigin(0.5, 0.5);
         shopButtonBG.width = 128;
         shopButtonBG.height = 128;
-        var shopButtonIcon = this.add.sprite(
-            0,
-            0,
-            'shopButtonIcon'
-        ).setDisplaySize(
-            64,
-            64
-        ).setOrigin(0.5, 0.5);
-        shopButtonIcon.y = -32;
-        shopButtonIcon.width = 128;
-        shopButtonIcon.height = 128;
 
         if (this.shopSceneActive == true) {
             shopButtonGroup.removeInteractive();
@@ -233,86 +239,50 @@ class GUIScene extends Phaser.Scene {
         }
 
         shopButtonGroup.add(shopButtonBG);
-        shopButtonGroup.add(shopButtonIcon);
-        shopButtonGroup.add(shopButtonText);
         shopButtonGroup.setSize(128, 128);
         shopButtonGroup.setPosition(96, this.scale.baseSize.height - 96);
         guiFooter.add(shopButtonGroup);
 
-        /* MAPBUTTON */
-        var mapButtonGroup = this.add.container();
-        mapButtonGroup.setSize(128, 128);
-        mapButtonGroup.setInteractive();
-        mapButtonGroup.input.cursor = 'pointer';
-        var mapButtonText = this.add.text(
-            0, 
-            0,
-            'Karte',
-        ).setStyle({
-            fontFamily: 'Fredoka',
-            fontSize: '20px', 
-            color: '#ffffff',
-            stroke: '#00000080',
-            strokeThickness: 4,
-        });
-        mapButtonText.setOrigin(0.5, 0.5);
-        mapButtonText.y = 8;
-        var mapButtonBG = this.add.sprite(
+        /* menuButton */
+        var menuButtonGroup = this.add.container();
+        menuButtonGroup.setSize(128, 128);
+        menuButtonGroup.setInteractive();
+        menuButtonGroup.input.cursor = 'pointer';
+        var menuButtonBG = this.add.sprite(
             0,
             0,
-            'mapButtonBG'
-        ).setAngle(
-            -20
+            'menuButtonBG'
         ).setDisplaySize(
             128,
             128
         ).setOrigin(0.5, 0.5);
-        mapButtonBG.width = 128;
-        mapButtonBG.height = 128;
-        var mapButtonIcon = this.add.sprite(
-            0,
-            0,
-            'mapButtonIcon'
-        ).setDisplaySize(
-            64,
-            64
-        ).setOrigin(0.5, 0.5);
-        mapButtonIcon.y = -32;
-        mapButtonIcon.width = 128;
-        mapButtonIcon.height = 128;
+        menuButtonBG.width = 128;
+        menuButtonBG.height = 128;
 
-        if (this.mapSceneActive == true) {
-            mapButtonGroup.removeInteractive();
-            var mapButtonActiveCircle = this.add.graphics();
-            mapButtonActiveCircle.fillStyle(
+        if (this.menuSceneActive == true) {
+            menuButtonGroup.removeInteractive();
+            var menuButtonActiveCircle = this.add.graphics();
+            menuButtonActiveCircle.fillStyle(
                 0xFFFFFF, 1
             );
-            mapButtonGroup.add(mapButtonActiveCircle);
-            mapButtonActiveCircle.fillCircle(0, 0, 8);
-            mapButtonActiveCircle.setPosition(0, 64);
+            menuButtonGroup.add(menuButtonActiveCircle); 
+            menuButtonActiveCircle.fillCircle(0, 0, 8);
+            menuButtonActiveCircle.setPosition(0, 64);
         }
 
-        mapButtonGroup.add(mapButtonBG);
-        mapButtonGroup.add(mapButtonIcon);
-        mapButtonGroup.add(mapButtonText);
+        menuButtonGroup.add(menuButtonBG);
+        menuButtonGroup.setSize(128, 128);
+        menuButtonGroup.setPosition(this.scale.baseSize.width - 96, this.scale.baseSize.height - 96);
+        guiFooter.add(menuButtonGroup);
 
-        mapButtonGroup.setSize(128, 128);
-        mapButtonGroup.setPosition(this.scale.baseSize.width - 96, this.scale.baseSize.height - 96);
-        guiFooter.add(mapButtonGroup);
-
-        settingButtonGroup.on(
-            'pointerdown', function() {
-                this.scene.start('SettingsScene');
-            }, this
-        );
         shopButtonGroup.on(
             'pointerdown', function() {
-                this.scene.start('ShopScene');
+                this.scene.launch('ShopScene');
             }, this
         );
-        mapButtonGroup.on(
+        menuButtonGroup.on(
             'pointerdown', function() {
-                this.scene.start('MapScene');
+                this.scene.launch('MenuScene');
             }, this
         );
 

@@ -1,7 +1,3 @@
-/* IMPORTS */
-@import url('snackbar.css');
-@import url('gui.css');
-
 :root {
     --baseSize: 16px;
 }

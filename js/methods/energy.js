@@ -1,53 +1,31 @@
 export class Energy {
     
-    constructor() {
-        this.energy = 5;
-        console.log(`Current energy: ${this.energy}`);
+    constructor(initialAmount, scene) {
+        this.energy = initialAmount;
+        this.scene = scene;
     }
 
-    updateEnergy() {
-        for (var i = 1; i <= 5; i++) {
-            var energyDiv = document.getElementById('energy' + i);
-            switch(true) {
-                case i <= this.energy:
-                    energyDiv.className = 'health_icon';
-                    break;
-                default:
-                    energyDiv.className = 'health_icon health_disabled';
-                    break;
-            }
-        }
+    setScene(scene) {
+        this.scene = scene;
     }
 
-    loseEnergy() {
+    loseEnergy(amount) {
         if (this.energy > 0) {
-            this.energy--;
-            this.updateEnergy();
-            this.showSnackbar(`Du hast ein Leben verloren, aktuell hast Du noch <b>${this.energy}</b> leben.`);
-            if (this.energy === 0) {
-                this.gameOver();
-            }
+            this.energy -= amount
+        }
+        if (this.energy === 0 || this.energy < 0) {
+            this.gameOver();
         }
     }
 
-    gainEnergy() {
+    gainEnergy(amount) {
         if (this.energy < 5) {
-            this.energy++;
-            this.updateEnergy();
-            this.showSnackbar(`Du hast ein Leben dazu bekommen, aktuell hast Du noch <b>${this.energy}</b> leben.`);
+            this.energy += amount;
         }
-    }
-
-    showSnackbar(energy) {
-        var snackbar = document.getElementById('snackbar');
-        var snackbarText = document.getElementById('snackbar_text');
-        snackbar.className = "show";
-        snackbarText.innerHTML = energy;
-        setTimeout(function(){ snackbar.className = snackbar.className.replace("show", ""); }, 5000);
     }
 
     gameOver() {
-        console.log("GAME OVER");
+        this.scene.scene.start('GameOverScene');
     }
 
 }

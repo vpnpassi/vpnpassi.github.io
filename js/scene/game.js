@@ -8,11 +8,9 @@ class GameScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.audio('game_music', ['assets/sound/game.mp3']);
     }
 
     create() {
-        var game_music = this.sound.add('menu_music', {volume: 0.025});
     }
 
     update() {

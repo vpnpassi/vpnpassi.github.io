@@ -1,9 +1,9 @@
 import { InitScreen } from './scene/init.js';
 import { GUIScene } from './scene/gui.js';
+import { GameOverScene } from './scene/gameOver.js';
 import { GameScene } from './scene/game.js';
-import { SettingsScene } from './scene/settings.js';
 import { ShopScene } from './scene/shop.js';
-import { MapScene } from './scene/map.js';
+import { MenuScene } from './scene/menu.js';
 
 var config = {
     type: Phaser.AUTO,
@@ -11,12 +11,12 @@ var config = {
     height: 1080,
     parent: 'gameCanvas',
     scene: [
-        //InitScreen,
-        MapScene,
-        SettingsScene, 
+        InitScreen,
+        MenuScene,
         ShopScene,
         GameScene,
-        GUIScene
+        GUIScene,
+        GameOverScene
     ],
     scale: {
         mode: Phaser.Scale.FIT,
