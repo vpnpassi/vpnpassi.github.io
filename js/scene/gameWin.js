@@ -1,8 +1,8 @@
 import { preloadBackground, createBackground } from '../utilitys/utils.js';
 
-class GameOverScene extends Phaser.Scene {
+class GameWinScreen extends Phaser.Scene {
     constructor() {
-        super({ key: 'GameOverScene' });
+        super({ key: 'GameWinScreen' });
     }
 
     preload() {
@@ -15,4 +15,4 @@ class GameOverScene extends Phaser.Scene {
 
 }
 
-export { GameOverScene };
+export { GameWinScreen };

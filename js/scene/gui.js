@@ -4,28 +4,30 @@ class GUIScene extends Phaser.Scene {
             key: 'GUIScene', 
             active: false
         });
-        this.gameStatsActive = false;
+        this.gameStatsActive = true;
         this.shopSceneActive = false;
         this.menuSceneActive = false;
         this.gameSceneActive = false;
+        this.gameScene = "";
+        this.levelHeadline = "";
 
     }
 
     init(data) {
-        if (data.from === 'gameSceneActive') {
+        if (data.from === 'GameScene') {
             this.shopSceneActive = false;
-            this.menuSceneActive = false;
-            this.gameStatsActive = true;
+            this.menuSceneActive = false; 
+            this.gameSceneActive = true;
+            this.gameScene = data.from;
+            this.levelHeadline = `Level ${data.level}`;
         }
         if (data.from === 'ShopScene') {
             this.shopSceneActive = true;
             this.menuSceneActive = false;
-            this.gameStatsActive = true;
         }
         if (data.from === 'MenuScene') {
             this.shopSceneActive = false;
             this.menuSceneActive = true;
-            this.gameStatsActive = true;
         }
 
         this.gameStatsEnergyValue = this.registry.get('gameStatsEnergyValue');
@@ -37,6 +39,7 @@ class GUIScene extends Phaser.Scene {
     preload() {
         this.load.image('shopButtonBG', 'assets/sprites/shop_button.png');
         this.load.image('menuButtonBG', 'assets/sprites/menu_button.png');
+        this.load.image('exitButtonBG', 'assets/sprites/exit_button.png');
 
         this.load.image('energyBarLeft', 'assets/sprites/EnergyBar_left.png');
         this.load.image('energyBarRight', 'assets/sprites/EnergyBar_right.png');
@@ -55,7 +58,25 @@ class GUIScene extends Phaser.Scene {
         var guiFooter = this.add.container();
         guiGroup.add(guiFooter);
 
-        /* GameStats */
+        // Level Headline
+        var levelHeadline = this.add.text(
+            0,
+            0,
+            this.levelHeadline
+        ).setStyle({
+            fontFamily: 'Fredoka',
+            fontSize: '48px', 
+            fontStyle: 'bold',
+            color: '#ffffff',
+        }).setOrigin(
+            0, 
+            0
+        ).setPosition(
+            96, 64
+        );
+        guiHeader.add(levelHeadline);
+
+        // GameStats
         var gameStatsGroup = this.add.container();
  
         var gameStatsEnergyGroup = this.add.container();
@@ -89,21 +110,21 @@ class GUIScene extends Phaser.Scene {
         ).setOrigin(0.5, 0.5);
         gameStatsEnergyGroup.add(energyBarRight);
 
-        var gameStatsEnergyCurrentText = this.add.text(0, 0, '').setOrigin(0.5, 0.5).setStyle({fontSize: '32px', fontFamily: 'Fredoka', color: '#ffffff', align: 'right', fontStyle: 'bold'});
+        this.gameStatsEnergyCurrentText = this.add.text(0, 0, '').setOrigin(0.5, 0.5).setStyle({fontSize: '32px', fontFamily: 'Fredoka', color: '#ffffff', align: 'right', fontStyle: 'bold'});
         
-        gameStatsEnergyCurrentText.setText(String(this.gameStatsEnergyValue.energy));
+        this.gameStatsEnergyCurrentText.setText(String(this.gameStatsEnergyValue.energy));
         
-        gameStatsEnergyWrapperGroup.add(gameStatsEnergyCurrentText);
+        gameStatsEnergyWrapperGroup.add(this.gameStatsEnergyCurrentText);
 
         gameStatsEnergyGroup.add(gameStatsEnergyWrapperGroup);
-        gameStatsEnergyWrapperGroup.setSize(8 + gameStatsEnergyCurrentText.width + 8, gameStatsEnergyCurrentText.height);
+        gameStatsEnergyWrapperGroup.setSize(8 + this.gameStatsEnergyCurrentText.width + 8, this.gameStatsEnergyCurrentText.height);
 
         energyBarMiddle.setDisplaySize(gameStatsEnergyWrapperGroup.width + 16, 64);
 
         energyBarLeft.setX(- (gameStatsEnergyWrapperGroup.width / 2) - (energyBarLeft.width / 2) + 24);
         energyBarRight.setX((gameStatsEnergyWrapperGroup.width / 2) + (energyBarRight.width / 2) - 24);
 
-        gameStatsEnergyGroup.width = energyBarLeft.width + 8 + gameStatsEnergyCurrentText.width + 8 + energyBarRight.width;
+        gameStatsEnergyGroup.width = energyBarLeft.width + 8 + this.gameStatsEnergyCurrentText.width + 8 + energyBarRight.width;
 
         gameStatsGroup.add(gameStatsEnergyGroup);
 
@@ -138,16 +159,16 @@ class GUIScene extends Phaser.Scene {
         ).setOrigin(0.5, 0.5);
         gameStatsGroup.add(goldBarRight);
 
-        var gameStatsGoldCurrentText = this.add.text(0, 0, '').setOrigin(0.5, 0.5).setStyle({fontSize: '32px', fontFamily: 'Fredoka', color: '#ffffff', align: 'right', fontStyle: 'bold'});
-        gameStatsGoldCurrentText.setText(String(this.gameStatsGoldValue.gold));
-        gameStatsGoldWrapperGroup.add(gameStatsGoldCurrentText);
-        gameStatsGoldWrapperGroup.width = gameStatsGoldCurrentText.width;
+        this.gameStatsGoldCurrentText = this.add.text(0, 0, '').setOrigin(0.5, 0.5).setStyle({fontSize: '32px', fontFamily: 'Fredoka', color: '#ffffff', align: 'right', fontStyle: 'bold'});
+        this.gameStatsGoldCurrentText.setText(String(this.gameStatsGoldValue.gold));
+        gameStatsGoldWrapperGroup.add(this.gameStatsGoldCurrentText);
+        gameStatsGoldWrapperGroup.width = this.gameStatsGoldCurrentText.width;
         gameStatsGoldGroup.add(gameStatsGoldWrapperGroup);
 
         goldBarLeft.setX(- (gameStatsGoldWrapperGroup.width / 2) - (goldBarLeft.width / 2) - 24);
         goldBarMiddle.setDisplaySize(8 + gameStatsGoldWrapperGroup.width + 8, 64);
         goldBarMiddle.setX(- 24);
-        gameStatsGoldCurrentText.setX(-24);
+        this.gameStatsGoldCurrentText.setX(-24);
         goldBarRight.setX((gameStatsGoldWrapperGroup.width / 2) + (goldBarRight.width / 2) - 48);
 
         gameStatsGoldGroup.width = goldBarLeft.width + gameStatsGoldWrapperGroup.width + goldBarRight.width;
@@ -184,10 +205,10 @@ class GUIScene extends Phaser.Scene {
         ).setOrigin(0.5, 0.5);
         gameStatsGemsGroup.add(gemBarRight);
 
-        var gameStatsGemsCurrentText = this.add.text(0, 0, '').setOrigin(0.5, 0.5).setStyle({fontSize: '32px', fontFamily: 'Fredoka', color: '#ffffff', align: 'right', fontStyle: 'bold'});
-        gameStatsGemsCurrentText.setText(String(this.gameStatsGemsValue.gems));
-        gameStatsGemsWrapperGroup.add(gameStatsGemsCurrentText);
-        gameStatsGemsGroup.width = gameStatsGemsCurrentText.width + 16;
+        this.gameStatsGemsCurrentText = this.add.text(0, 0, '').setOrigin(0.5, 0.5).setStyle({fontSize: '32px', fontFamily: 'Fredoka', color: '#ffffff', align: 'right', fontStyle: 'bold'});
+        this.gameStatsGemsCurrentText.setText(String(this.gameStatsGemsValue.gems));
+        gameStatsGemsWrapperGroup.add(this.gameStatsGemsCurrentText);
+        gameStatsGemsGroup.width = this.gameStatsGemsCurrentText.width + 16;
         gameStatsGemsGroup.add(gameStatsGemsWrapperGroup);
 
         gemBarLeft.setX(- (gameStatsGemsGroup.width / 2) - (gemBarLeft.width / 2) + 24);
@@ -210,81 +231,129 @@ class GUIScene extends Phaser.Scene {
 
         guiHeader.add(gameStatsGroup);
         
-        /* SHOPBUTTON */
-        var shopButtonGroup = this.add.container();
-        shopButtonGroup.setSize(128, 128);
-        shopButtonGroup.setInteractive();
-        shopButtonGroup.input.cursor = 'pointer';
+        if ((this.shopSceneActive || this.menuSceneActive) == true) {
+            // SHOPBUTTON
+            var shopButtonGroup = this.add.container();
+            shopButtonGroup.setSize(128, 128);
+            shopButtonGroup.setInteractive();
+            shopButtonGroup.input.cursor = 'pointer';
 
-        var shopButtonBG = this.add.sprite(
-            0,
-            0,
-            'shopButtonBG'
-        ).setDisplaySize(
-            128,
-            128
-        ).setOrigin(0.5, 0.5);
-        shopButtonBG.width = 128;
-        shopButtonBG.height = 128;
+            var shopButtonBG = this.add.sprite(
+                0,
+                0,
+                'shopButtonBG'
+            ).setDisplaySize(
+                128,
+                128
+            ).setOrigin(0.5, 0.5);
+            shopButtonBG.width = 128;
+            shopButtonBG.height = 128;
 
-        if (this.shopSceneActive == true) {
-            shopButtonGroup.removeInteractive();
-            var shopButtonActiveCircle = this.add.graphics();
-            shopButtonActiveCircle.fillStyle(
-                0xFFFFFF, 1
+            if (this.shopSceneActive == true) {
+                shopButtonGroup.removeInteractive();
+                var shopButtonActiveCircle = this.add.graphics();
+                shopButtonActiveCircle.fillStyle(
+                    0xFFFFFF, 1
+                );
+                shopButtonGroup.add(shopButtonActiveCircle);
+                shopButtonActiveCircle.fillCircle(0, 0, 8);
+                shopButtonActiveCircle.setPosition(0, 64);
+            }
+
+            shopButtonGroup.add(shopButtonBG);
+            shopButtonGroup.setSize(128, 128);
+            shopButtonGroup.setPosition(96, this.scale.baseSize.height - 96);
+            guiFooter.add(shopButtonGroup);
+
+            // MenuButton
+            var menuButtonGroup = this.add.container();
+            menuButtonGroup.setSize(128, 128);
+            menuButtonGroup.setInteractive();
+            menuButtonGroup.input.cursor = 'pointer';
+            var menuButtonBG = this.add.sprite(
+                0,
+                0,
+                'menuButtonBG'
+            ).setDisplaySize(
+                128,
+                128
+            ).setOrigin(0.5, 0.5);
+            menuButtonBG.width = 128;
+            menuButtonBG.height = 128;
+
+            if (this.menuSceneActive == true) {
+                menuButtonGroup.removeInteractive();
+                var menuButtonActiveCircle = this.add.graphics();
+                menuButtonActiveCircle.fillStyle(
+                    0xFFFFFF, 1
+                );
+                menuButtonGroup.add(menuButtonActiveCircle); 
+                menuButtonActiveCircle.fillCircle(0, 0, 8);
+                menuButtonActiveCircle.setPosition(0, 64);
+            }
+
+            menuButtonGroup.add(menuButtonBG);
+            menuButtonGroup.setSize(128, 128);
+            menuButtonGroup.setPosition(this.scale.baseSize.width - 96, this.scale.baseSize.height - 96);
+            guiFooter.add(menuButtonGroup);
+
+            shopButtonGroup.on(
+                'pointerdown', function() {
+                    this.scene.start('ShopScene');
+                    this.scene.stop('MenuScene');
+                }, this
             );
-            shopButtonGroup.add(shopButtonActiveCircle);
-            shopButtonActiveCircle.fillCircle(0, 0, 8);
-            shopButtonActiveCircle.setPosition(0, 64);
+            menuButtonGroup.on(
+                'pointerdown', function() {
+                    this.scene.start('MenuScene');
+                    this.scene.stop('ShopScene');
+                }, this
+            );
+
         }
 
-        shopButtonGroup.add(shopButtonBG);
-        shopButtonGroup.setSize(128, 128);
-        shopButtonGroup.setPosition(96, this.scale.baseSize.height - 96);
-        guiFooter.add(shopButtonGroup);
+        if (this.gameSceneActive == true) {
+            // EXITBUTTON
+            var exitButtonGroup = this.add.container();
+            exitButtonGroup.setSize(128, 128);
+            exitButtonGroup.setInteractive();
+            exitButtonGroup.input.cursor = 'pointer';
 
-        /* menuButton */
-        var menuButtonGroup = this.add.container();
-        menuButtonGroup.setSize(128, 128);
-        menuButtonGroup.setInteractive();
-        menuButtonGroup.input.cursor = 'pointer';
-        var menuButtonBG = this.add.sprite(
-            0,
-            0,
-            'menuButtonBG'
-        ).setDisplaySize(
-            128,
-            128
-        ).setOrigin(0.5, 0.5);
-        menuButtonBG.width = 128;
-        menuButtonBG.height = 128;
+            var exitButtonBG = this.add.sprite(
+                0,
+                0,
+                'exitButtonBG'
+            ).setDisplaySize(
+                128,
+                128
+            ).setOrigin(0.5, 0.5);
+            exitButtonBG.width = 128;
+            exitButtonBG.height = 128;
 
-        if (this.menuSceneActive == true) {
-            menuButtonGroup.removeInteractive();
-            var menuButtonActiveCircle = this.add.graphics();
-            menuButtonActiveCircle.fillStyle(
-                0xFFFFFF, 1
+            exitButtonGroup.add(exitButtonBG);
+            exitButtonGroup.setSize(128, 128);
+            exitButtonGroup.setPosition(this.scale.baseSize.width - 96, 96);
+
+            exitButtonGroup.on(
+                'pointerdown', function() {
+                    this.scene.start('MenuScene');
+                    this.levelHeadline = "";
+                    this.scene.stop(this.gameScene);
+                    this.gameSceneActive = false;
+                }, this
             );
-            menuButtonGroup.add(menuButtonActiveCircle); 
-            menuButtonActiveCircle.fillCircle(0, 0, 8);
-            menuButtonActiveCircle.setPosition(0, 64);
         }
 
-        menuButtonGroup.add(menuButtonBG);
-        menuButtonGroup.setSize(128, 128);
-        menuButtonGroup.setPosition(this.scale.baseSize.width - 96, this.scale.baseSize.height - 96);
-        guiFooter.add(menuButtonGroup);
+    }
 
-        shopButtonGroup.on(
-            'pointerdown', function() {
-                this.scene.launch('ShopScene');
-            }, this
-        );
-        menuButtonGroup.on(
-            'pointerdown', function() {
-                this.scene.launch('MenuScene');
-            }, this
-        );
+    update() {
+        this.gameStatsEnergyValue = this.registry.get('gameStatsEnergyValue');
+        this.gameStatsGoldValue = this.registry.get('gameStatsGoldValue');
+        this.gameStatsGemsValue = this.registry.get('gameStatsGemsValue');
+
+        this.gameStatsEnergyCurrentText.setText(String(this.gameStatsEnergyValue.energy));
+        this.gameStatsGoldCurrentText.setText(String(this.gameStatsGoldValue.gold));
+        this.gameStatsGemsCurrentText.setText(String(this.gameStatsGemsValue.gems));
 
     }
 }

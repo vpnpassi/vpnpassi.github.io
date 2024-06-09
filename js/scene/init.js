@@ -1,7 +1,7 @@
-import { preloadBackground, createBackground } from "../module/bgImage.js";
 import { Energy } from '../methods/energy.js';
 import { Gold } from '../methods/gold.js';
 import { Gems } from '../methods/gem.js';
+import { addAnimation, preloadBackground, createBackground } from '../utilitys/utils.js';
 
 class InitScreen extends Phaser.Scene {
     constructor() {
@@ -10,13 +10,19 @@ class InitScreen extends Phaser.Scene {
 
     init() {
         this.registry.set('gameStatsEnergyValue', new Energy(5, this));
-        this.registry.set('gameStatsGoldValue', new Gold(0));
-        this.registry.set('gameStatsGemsValue', new Gems(0));
+        this.registry.set('gameStatsGoldValue', new Gold(0, this));
+        this.registry.set('gameStatsGemsValue', new Gems(0, this));
     }
 
     preload() {
         preloadBackground(this);
         this.load.image('startGame_button_icon', 'assets/icons/icon_ui-arrow-right_LP.png');
+        this.load.atlas('playerSprite', 'assets/sprites/character-animation.png', 'assets/sprites/character-animation.json');
+        this.load.atlas('goldSprite', 'assets/sprites/gold-animation.png', 'assets/sprites/gold-animation.json');
+        this.load.spritesheet('tileset', 'assets/map/tileset-64x64.png', {
+            frameWidth: 64,
+            frameHeight: 64
+        });
     }
 
     create() {
@@ -71,9 +77,26 @@ class InitScreen extends Phaser.Scene {
 
         startGame_button_container.on(
             'pointerdown', function() {
-                this.scene.launch('MenuScene');
+                this.scene.start('MenuScene');
+                this.scene.stop('InitScreen');
             }, this
         );
+
+        addAnimation(this, 'idle-down', 'playerSprite', 1, 2, 'idle-down-', '.png', -1, 4);
+        addAnimation(this, 'idle-side', 'playerSprite', 1, 2, 'idle-side-', '.png', -1, 4);
+        addAnimation(this, 'idle-back', 'playerSprite', 1, 2, 'idle-back-', '.png', -1, 4);
+        addAnimation(this, 'walk-down', 'playerSprite', 1, 4, 'walk-down-', '.png', -1, 4);
+        addAnimation(this, 'walk-side', 'playerSprite', 1, 4, 'walk-side-', '.png', -1, 4);
+        addAnimation(this, 'walk-back', 'playerSprite', 1, 4, 'walk-back-', '.png', -1, 4);
+        addAnimation(this, 'hit-down', 'playerSprite', 1, 2, 'hit-down-', '.png', -1, 4);
+        addAnimation(this, 'hit-side', 'playerSprite', 1, 2, 'hit-side-', '.png', -1, 4);
+        addAnimation(this, 'hit-back', 'playerSprite', 1, 2, 'hit-back-', '.png', -1, 4);
+        addAnimation(this, 'death-down', 'playerSprite', 1, 3, 'death-down-', '.png', -1, 6);
+        addAnimation(this, 'death-side', 'playerSprite', 1, 3, 'death-side-', '.png', -1, 6);
+        addAnimation(this, 'death-back', 'playerSprite', 1, 3, 'death-back-', '.png', -1, 6);
+
+        addAnimation(this, 'gold-flip', 'goldSprite', 1, 16, 'Gold-', '.png', -1, 16);
+
     }
 }
 

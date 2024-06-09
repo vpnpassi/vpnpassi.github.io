@@ -11,8 +11,9 @@ export class Energy {
 
     loseEnergy(amount) {
         if (this.energy > 0) {
-            this.energy -= amount
-        }
+            const currentEnergy = scene.registry.get('gameStatsEnergyValue').value;
+            scene.registry.set('gameStatsEnergyValue', new Energy(currentEnergy + amount));
+            }
         if (this.energy === 0 || this.energy < 0) {
             this.gameOver();
         }
@@ -20,8 +21,9 @@ export class Energy {
 
     gainEnergy(amount) {
         if (this.energy < 5) {
-            this.energy += amount;
-        }
+            const currentEnergy = scene.registry.get('gameStatsEnergyValue').value;
+            scene.registry.set('gameStatsEnergyValue', new Energy(currentEnergy - amount));
+            }
     }
 
     gameOver() {
