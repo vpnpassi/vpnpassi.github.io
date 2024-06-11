@@ -41,12 +41,12 @@ class GUIScene extends Phaser.Scene {
         this.load.image('menuButtonBG', 'assets/sprites/menu_button.png');
         this.load.image('exitButtonBG', 'assets/sprites/exit_button.png');
 
-        this.load.image('energyBarLeft', 'assets/sprites/EnergyBar_left.png');
-        this.load.image('energyBarRight', 'assets/sprites/EnergyBar_right.png');
-        this.load.image('goldBarLeft', 'assets/sprites/GoldBar_left.png');
-        this.load.image('goldBarRight', 'assets/sprites/GoldBar_right.png');
-        this.load.image('gemBarLeft', 'assets/sprites/GemBar_left.png');
-        this.load.image('gemBarRight', 'assets/sprites/GemBar_right.png');
+        this.load.image('energyBarLeft', 'assets/sprites/Energybar_left.png');
+        this.load.image('energyBarRight', 'assets/sprites/Energybar_right.png');
+        this.load.image('goldBarLeft', 'assets/sprites/Goldbar_left.png');
+        this.load.image('goldBarRight', 'assets/sprites/Goldbar_right.png');
+        this.load.image('gemBarLeft', 'assets/sprites/Gembar_left.png');
+        this.load.image('gemBarRight', 'assets/sprites/Gembar_right.png');
         this.load.image('statBarMiddle', 'assets/sprites/Middle.png');
     }
 
