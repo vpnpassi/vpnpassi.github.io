@@ -1,7 +1,7 @@
-import { Energy } from '../methods/energy.js';
-import { Gold } from '../methods/gold.js';
-import { Gems } from '../methods/gem.js';
-import { addAnimation, preloadBackground, createBackground } from '../utilitys/utils.js';
+import { Energy } from '../classes/energy.js';
+import { Gold } from '../classes/gold.js';
+import { Gems } from '../classes/gem.js';
+import { addAnimation, preloadBackground, createBackground, switchScene } from '../utilitys/utils.js';
 
 class InitScreen extends Phaser.Scene {
     constructor() {
@@ -9,9 +9,18 @@ class InitScreen extends Phaser.Scene {
     }
 
     init() {
-        this.registry.set('gameStatsEnergyValue', new Energy(5, this));
-        this.registry.set('gameStatsGoldValue', new Gold(0, this));
-        this.registry.set('gameStatsGemsValue', new Gems(0, this));
+
+        if (!this.registry.has('gameStatsEnergyValue')) {
+            this.registry.set('gameStatsEnergyValue', new Energy(5, this));
+        }
+        if (!this.registry.has('gameStatsGoldValue')) {
+            this.registry.set('gameStatsGoldValue', new Gold(0, this));
+        }
+        if (!this.registry.has('gameStatsGemsValue')) {
+            this.registry.set('gameStatsGemsValue', new Gems(0, this));
+        }  
+        
+        this.registry.set('uncoveredGoals', 0);
     }
 
     preload() {
@@ -77,8 +86,7 @@ class InitScreen extends Phaser.Scene {
 
         startGame_button_container.on(
             'pointerdown', function() {
-                this.scene.start('MenuScene');
-                this.scene.stop('InitScreen');
+                switchScene(this, 'MenuScene');
             }, this
         );
 

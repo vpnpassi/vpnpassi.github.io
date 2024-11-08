@@ -1,4 +1,5 @@
-import { switchScene, preloadBackground, createBackground } from '../utilitys/utils.js';
+import { createMenuButtonGroup } from '../utilitys/ui.js';
+import { preloadBackground, createBackground } from '../utilitys/utils.js';
 
 class MenuScene extends Phaser.Scene {
     constructor() {
@@ -7,7 +8,7 @@ class MenuScene extends Phaser.Scene {
 
     preload() {
         preloadBackground(this);
-        this.load.image('level1', 'assets/images/LVL.png');
+        this.load.image('level1', 'assets/images/LVL-1.png');
         this.load.image('level2', 'assets/images/LVL-2.png');
         this.load.image('level3', 'assets/images/LVL-3.png');
         this.load.image('level4', 'assets/images/LVL-4.png');
@@ -25,7 +26,7 @@ class MenuScene extends Phaser.Scene {
         var menu_headline_text = this.add.text(
             0, 
             0, 
-            'Level'
+            'Levelauswahl'
         ).setStyle({
             fontFamily: 'Fredoka',
             fontSize: '64px', 
@@ -41,106 +42,29 @@ class MenuScene extends Phaser.Scene {
             160 + 96
         );
 
-        var levelGroup = this.add.container();
-        var level1 = this.add.sprite(
-            0,
-            0,
-            'level1'
-        ).setDisplaySize(
-            512,
-            192
-        ).setOrigin(0.5, 0.5);
-        var level2 = this.add.sprite(
-            0,
-            0,
-            'level2'
-        ).setDisplaySize(
-            512,
-            192
-        ).setOrigin(0.5, 0.5);
-        var level3 = this.add.sprite(
-            0,
-            0,
-            'level3'
-        ).setDisplaySize(
-            512,
-            192
-        ).setOrigin(0.5, 0.5);
-        var level4 = this.add.sprite(
-            0,
-            0,
-            'level4'
-        ).setDisplaySize(
-            512,
-            192
-        ).setOrigin(0.5, 0.5);
-        var level5 = this.add.sprite(
-            0,
-            0,
-            'level5'
-        ).setDisplaySize(
-            512,
-            192
-        ).setOrigin(0.5, 0.5);
-        var level6 = this.add.sprite(
-            0,
-            0,
-            'level6'
-        ).setDisplaySize(
-            512,
-            192
-        ).setOrigin(0.5, 0.5);
+        var levelButtonWidth = 512 + 32;
+        var levelButtonHeight = 192 + 32;	
 
-        levelGroup.add(level1);
-        levelGroup.add(level2);
-        levelGroup.add(level3);
-        levelGroup.add(level4);
-        levelGroup.add(level5);
-        levelGroup.add(level6);
-
-        levelGroup.width = 1664;
-        levelGroup.height = 448;
-
-        levelGroup.setPosition(
-            this.scale.baseSize.width / 2,
-            this.scale.baseSize.height / 2 - 64,
-        );
-
-        level1.setPosition(- level1.width - 64, -32).setInteractive();
-        level1.input.cursor = 'pointer';
-        level2.setPosition(0, -32).setInteractive();
-        level2.input.cursor = 'pointer';
-        level3.setPosition(level3.width + 64, -32).setInteractive();
-        level3.input.cursor = 'pointer';
-        level4.setPosition(- level4.width - 64, level4.height + 32).setInteractive();
-        level4.input.cursor = 'pointer';
-        level5.setPosition(0, level5.height + 32);
-        level6.setPosition(level6.width + 64, level6.height + 32);
-
-        level1.on(
-            'pointerdown', function() {
-                switchScene(this, 'GameScene', '1', 'MenuScene', 'GUIScene');
-            }, this
-        );
-
-        level2.on(
-            'pointerdown', function() {
-                switchScene(this, 'GameScene', '2', 'MenuScene', 'GUIScene');
-            }, this
-        );
-
-        level3.on(
-            'pointerdown', function() {
-                switchScene(this, 'GameScene', '3', 'MenuScene', 'GUIScene');
-            }, this
-        );
-
-        level4.on(
-            'pointerdown', function() {
-                switchScene(this, 'GameScene', '4', 'MenuScene', 'GUIScene');
-            }, this
-        );
-
+        this.levelGroup = createMenuButtonGroup(this, [
+            { 
+                key: 'level1', level: 1, timeLimit: 100, width: levelButtonWidth, height: levelButtonHeight, position: { x: - levelButtonWidth - 64, y: -32 }, active: true,
+            },
+            { 
+                key: 'level2', level: 2, timeLimit: 100, width: levelButtonWidth, height: levelButtonHeight, position: { x: 0, y: -32 }, active: true,
+            },
+            { 
+                key: 'level3', level: 3, timeLimit: 100, width: levelButtonWidth, height: levelButtonHeight, position: { x: levelButtonWidth + 64, y: -32 }, active: true,
+            },
+            { 
+                key: 'level4', level: 4, timeLimit: 100, width: levelButtonWidth, height: levelButtonHeight, position: { x: - levelButtonWidth - 64, y: levelButtonHeight + 32 }, active: true,
+            },
+            { 
+                key: 'level5', width: levelButtonWidth, height: levelButtonHeight, position: { x: 0, y: levelButtonHeight + 32 }, active: false,
+            },
+            { 
+                key: 'level6', width: levelButtonWidth, height: levelButtonHeight, position: { x: levelButtonWidth + 64, y: levelButtonHeight + 32 }, active: false,
+            },                                                            
+        ]);
 
     }
 

@@ -1,10 +1,10 @@
 import { InitScreen } from './scene/init.js';
 import { GUIScene } from './scene/gui.js';
-import { GameOverScene } from './scene/gameOver.js';
-import { GameWinScreen } from './scene/gameWin.js';
 import { ShopScene } from './scene/shop.js';
 import { MenuScene } from './scene/menu.js';
 import { GameScene } from './scene/game.js';
+import { PopUpScene } from './scene/popUp.js';
+import { AdScene } from './scene/ad.js';
 
 var config = {
     type: Phaser.AUTO,
@@ -17,8 +17,8 @@ var config = {
         ShopScene,
         GameScene,
         GUIScene,
-        GameOverScene,
-        GameWinScreen
+        PopUpScene,
+        AdScene
     ],
     fps: {
         target: 60
@@ -27,12 +27,15 @@ var config = {
         default: 'arcade',
         arcade: {
             gravity: { y: 0 },
-            debug: true
+            debug: false
         }
     },
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH
+    },
+    audio: {
+        noAudio: true
     }
 };
 

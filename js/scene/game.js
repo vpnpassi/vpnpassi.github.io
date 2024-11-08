@@ -1,4 +1,4 @@
-import { addPlayer, addElement, movePlayer, pushBox, collectCoin } from '../utilitys/utils.js';
+import { addPlayer, addElement, movePlayer, pushBox, collectCoin, checkBoxGoalState } from '../utilitys/gameFunctions.js';
 
 class GameScene extends Phaser.Scene {
     constructor() {
@@ -7,7 +7,8 @@ class GameScene extends Phaser.Scene {
 
     
     init(data) {
-        this.level = data.level || 1;        
+        this.level = data.level || 1;
+        this.timeLimit = data.timeLimit || 100;
     }
 
     preload() {
@@ -17,6 +18,7 @@ class GameScene extends Phaser.Scene {
 
     create(data) {
         this.level = data.level || 1;
+        this.timeLimit = data.timeLimit || 100;
         this.gridSize = 64;
 
         // MAP
@@ -68,6 +70,9 @@ class GameScene extends Phaser.Scene {
             case ("3" || "4"):
                 this.cameras.main.setBackgroundColor('#FDA92A');
                 break;
+            case ("5" || "6"):
+                this.cameras.main.setBackgroundColor('#E24919');
+                break;
             default:
                 this.cameras.main.setBackgroundColor('#77B3FF');
                 break;
@@ -79,15 +84,18 @@ class GameScene extends Phaser.Scene {
 
         this.isMoving = false;
 
+        this.registry.set('uncoveredGoals', this.goalGroup.children.entries.length);
+        checkBoxGoalState(this, this.level, this.timeLimit);
     }
 
     update() {
         
+        if (!this.input.enabled) return;
 
         if (this.isMoving) return;
 
         if (Phaser.Input.Keyboard.JustDown(this.cursors.left)) {
-            movePlayer(this, -this.gridSize, 0);
+            movePlayer(this, this.level, this.timeLimit, -this.gridSize, 0);
             if (!this.player.anims.currentAnim || this.player.anims.currentAnim.key !== 'walk-side') {
                 this.player.anims.play('walk-side', true);
             }
@@ -95,7 +103,7 @@ class GameScene extends Phaser.Scene {
             this.lastDirection = 'walk-side';
             this.moving = true;
         } else if (Phaser.Input.Keyboard.JustDown(this.cursors.right)) {
-            movePlayer(this, this.gridSize, 0);
+            movePlayer(this, this.level, this.timeLimit, this.gridSize, 0);
             if (!this.player.anims.currentAnim || this.player.anims.currentAnim.key !== 'walk-side') {
                 this.player.anims.play('walk-side', true);
             }
@@ -103,14 +111,14 @@ class GameScene extends Phaser.Scene {
             this.lastDirection = 'walk-side';
             this.moving = true;
         } else if (Phaser.Input.Keyboard.JustDown(this.cursors.up)) {
-            movePlayer(this, 0, -this.gridSize);
+            movePlayer(this, this.level, this.timeLimit, 0, -this.gridSize);
             if (!this.player.anims.currentAnim || this.player.anims.currentAnim.key !== 'walk-back') {
                 this.player.anims.play('walk-back', true);
             }
             this.lastDirection = 'walk-back';
             this.moving = true;
         } else if (Phaser.Input.Keyboard.JustDown(this.cursors.down)) {
-            movePlayer(this, 0, this.gridSize);
+            movePlayer(this, this.level, this.timeLimit, 0, this.gridSize);
             if (!this.player.anims.currentAnim || this.player.anims.currentAnim.key !== 'walk-down') {
                 this.player.anims.play('walk-down', true);
             }
