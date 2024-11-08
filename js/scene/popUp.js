@@ -17,11 +17,11 @@ class PopUpScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('exitButtonBG', 'assets/sprites/Exit_button.png');
+        this.load.image('exitButtonBG', 'assets/sprites/Exit_Button.png');
         this.load.image('redoAdButtonBG', 'assets/sprites/Redo_Ad_Button.png');
         this.load.image('startAdButtonBG', 'assets/sprites/Start_Ad_Button.png');
         this.load.image('startEnergyButtonBG', 'assets/sprites/Start_Energy_Button.png');
-        this.load.image('nextButtonBG', 'assets/sprites/Next_button.png');
+        this.load.image('nextButtonBG', 'assets/sprites/Next_Button.png');
         this.load.image('redoGoldButtonBG', 'assets/sprites/Redo_Gold_Button.png');
         this.load.image('cancelButtonBG', 'assets/sprites/Cancel_Button.png');
         this.load.image('buyButtonBG', 'assets/sprites/Buy_Button.png');

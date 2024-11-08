@@ -65,9 +65,9 @@ class GUIScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('shopButtonBG', 'assets/sprites/Shop_button.png');
-        this.load.image('menuButtonBG', 'assets/sprites/Menu_button.png');
-        this.load.image('exitButtonBG', 'assets/sprites/Exit_button.png');
+        this.load.image('shopButtonBG', 'assets/sprites/Shop_Button.png');
+        this.load.image('menuButtonBG', 'assets/sprites/Menu_Button.png');
+        this.load.image('exitButtonBG', 'assets/sprites/Exit_Button.png');
         this.load.image('redoAdButtonBG', 'assets/sprites/Redo_Ad_Button.png');
         this.load.image('redoGoldButtonBG', 'assets/sprites/Redo_Gold_Button.png');
         this.load.image('resetButtonBG', 'assets/sprites/Reset_Button.png');
