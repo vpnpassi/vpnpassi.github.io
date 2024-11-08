@@ -13,7 +13,7 @@ class ShopScene extends Phaser.Scene {
     preload() {
         preloadBackground(this);
         this.load.image('gem1', 'assets/images/Small_Gem.png');
-        this.load.image('gem2', 'assets/images/medium_Gem.png');
+        this.load.image('gem2', 'assets/images/Medium_Gem.png');
         this.load.image('gem3', 'assets/images/Large_Gem.png');
         this.load.image('energy1', 'assets/images/Small_Energy.png');
         this.load.image('energy2', 'assets/images/Medium_Energy.png');
